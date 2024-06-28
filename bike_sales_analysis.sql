@@ -121,3 +121,55 @@
 		productid, salesorderid;
 		
 --**************************************************************************************************
+
+-- Sales Orders Analysis
+
+-- Q1: Find the top-selling product within each category along with its total sales amount.
+	SELECT 	
+		pt.short_descr AS product,
+		SUM(netamount) AS total_sales
+	FROM 
+		products AS p
+	JOIN 
+		prodcategorytext AS pt ON p.prodcategoryid = pt.prodcategoryid
+	JOIN 
+		salesitem AS si ON si.productid = p.productid
+	GROUP BY 
+		pt.short_descr
+	ORDER BY 
+		total_sales DESC;
+
+
+-- Q2: Calculate the total gross amount for each sales organization.
+
+	SELECT 
+		salesorg AS sales_organization,
+		SUM(si.grossamount) AS gross_amount
+	FROM 
+		orders AS o
+	JOIN 
+		salesitem AS si ON o.salesorderid = si.salesorderid
+	GROUP BY 
+		salesorg
+	ORDER BY 
+		gross_amount DESC;
+
+
+-- Q3: Find the top 5 sales orders by net amount.
+	SELECT 
+		salesorderid AS order_number,
+		SUM (netamount) AS net_amount
+	FROM 
+		salesitem
+	GROUP BY 
+		salesorderid
+	ORDER BY 
+		net_amount DESC
+	LIMIT 5;
+
+
+-- Q4: How many sales orders were created in the year 2018?
+	SELECT COUNT(*)
+	FROM 
+		orders
+	WHERE EXTRACT(YEAR FROM createdate) = 2018;
