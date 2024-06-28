@@ -89,3 +89,35 @@
 		employees AS e ON p.changedby = e.employee_id
 	GROUP BY 
 		e.first_name, e.last_name;
+
+**********************************************************************************************
+	
+-- Sales Orders Items Analysis
+
+-- Q8: Calculate the total gross amount for each sales order.
+	SELECT SUM(grossamount) AS total_gross_amount
+	FROM orders;
+
+
+-- Q9: Which products contribute the most to revenue when the billing status is 'Complete'
+	SELECT 
+	    salesorderid, 
+	    netamount, 	    
+	   	ROUND((netamount / SUM(netamount) OVER() * 100),2) AS revenue_contribution,		
+	    SUM(netamount) OVER() AS total_revenue,
+		billingstatus
+	FROM 
+   	 orders;
+
+
+-- Q10: Find the sales order items for a specific product ID.
+
+	SELECT 
+		productid, 
+		salesorderid
+	FROM 
+		salesitem
+	GROUP BY 
+		productid, salesorderid;
+		
+**************************************************************************************************
