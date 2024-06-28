@@ -9,6 +9,7 @@
 	GROUP BY 
 		prodcategoryid;
 
+
 -- Q2: List the top 5 most expensive products.
 	SELECT 
 		productid, 
@@ -18,6 +19,7 @@
 	ORDER BY 
 		price DESC
 	LIMIT 5;
+
 
 -- Q3: Find all products that belong to the 'Mountain Bike' category
 	SELECT 
