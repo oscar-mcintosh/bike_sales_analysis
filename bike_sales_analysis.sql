@@ -170,8 +170,78 @@
 	LIMIT 5;
 
 
+--**************************************************************************************
+-- Business Partners Analysis
+-- Q1: How many business partners are there for each partner role?
+	SELECT 
+		partner_role, 
+		COUNT(partner_role) AS partner_count
+	FROM 
+		partners
+	GROUP BY 
+		partner_role;
+
+
+-- Q2: List the top 5 companies with the most recent creation dates.
+	SELECT 
+		company_name,
+		created_at AS creation_date
+	FROM 
+		partners
+	ORDER BY created_at
+	LIMIT 5;
+
+
 -- Q4: How many sales orders were created in the year 2018?
 	SELECT COUNT(*)
 	FROM 
 		orders
 	WHERE EXTRACT(YEAR FROM createdate) = 2018;
+
+
+--************************************************************************************************
+-- Employees Analysis
+-- Q1: Find the number of employees for each sex.
+	SELECT 
+		sex, 
+		COUNT(sex) AS number_of_employees
+	FROM 
+		employees
+	GROUP BY 
+		sex;
+
+
+-- Q2: List the employees who have 'W' in their first name 
+	SELECT 
+		first_name
+	FROM 
+		employees
+	WHERE 
+		first_name ILIKE '%w%';
+
+
+--************************************************************************************************
+-- Product Categories Analysis
+-- Q1: List all product categories along with their descriptions.
+	SELECT 
+		pc.prodcategoryid,
+		pt.short_descr
+	FROM 
+		productcategory AS pc 
+	JOIN 
+		prodcategorytext AS pt 
+	ON pc.prodcategoryid = pt.prodcategoryid;
+
+
+-- Q2: Find all products that belong to the 'Mountain Bike' category.
+	SELECT 
+		p.productid,		
+		pt.short_descr
+	FROM 
+		productcategory AS pc 
+	JOIN prodcategorytext AS pt 
+	ON pc.prodcategoryid = pt.prodcategoryid
+	JOIN products AS p
+	ON pc.prodcategoryid = p.prodcategoryid
+	WHERE pt.short_descr LIKE '%Mount%';
+
