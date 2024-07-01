@@ -245,3 +245,56 @@
 	ON pc.prodcategoryid = p.prodcategoryid
 	WHERE pt.short_descr LIKE '%Mount%';
 
+
+-- Addresses Analysis
+-- Q1: Count the number of addresses in each country.
+		SELECT country, COUNT(country) AS address_count
+		FROM address
+		GROUP BY country;
+
+
+-- Q2: List all addresses in a specific city, e.g., 'New York'.
+		SELECT city, street, postalcode, country
+		FROM address
+		WHERE city = 'Toronto';
+
+
+-- Q3: Find the number of business partners in each region.
+		SELECT a.region, COUNT(a.region) AS region_count
+		FROM partners AS p
+		JOIN address AS a
+		ON p.address_id = a.addressid
+		GROUP BY region;
+
+
+
+-- Combining Data from Multiple Tables
+-- Q1: List the top 5 employees who have created the most sales orders.
+		WITH ranked_employees AS (
+		    SELECT 
+		        e.first_name || ' ' || e.last_name AS employee_name, 
+		        COUNT(o.salesorderid) AS sales_order_count,			
+		        DENSE_RANK() OVER(ORDER BY COUNT(o.salesorderid) DESC) AS rank 	
+		    FROM employees AS e
+		    JOIN orders AS o ON e.employee_id = o.createdby
+		    GROUP BY e.first_name, e.last_name
+		)
+		SELECT *
+		FROM ranked_employees
+		WHERE rank <= 5
+		ORDER BY sales_order_count DESC;
+
+
+-- Q2: Find the total sales amount (gross) for each product category.
+		SELECT pt.short_descr, SUM(o.grossamount) AS total_sales_gross
+		FROM orders AS o
+		JOIN salesitem AS si
+		ON o.salesorderid = si.salesorderid
+		JOIN products AS p
+		ON si.productid = p.productid
+		JOIN productcategory AS pc
+		ON p.prodcategoryid = pc.prodcategoryid
+		JOIN prodcategorytext AS pt
+		ON pc.prodcategoryid = pt.prodcategoryid
+		GROUP BY pt.short_descr
+
